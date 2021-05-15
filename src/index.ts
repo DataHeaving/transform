@@ -1,5 +1,4 @@
 import * as csv from "csv-stringify";
-import * as source from "@data-heaving/source-sql";
 import * as common from "@data-heaving/common";
 
 // For some reason 'stringify' method is not exposed by csv-stringify typings, but we can add it here.
@@ -9,26 +8,28 @@ declare module "csv-stringify" {
   }
 }
 
-export type CSVTransformOptions = Partial<{
-  emitHeader: boolean;
-  castDate?: (date: Date) => string;
-  eol: string;
-}>;
-
-function sql2CSV(
-  opts?: CSVTransformOptions,
+function sql2Csv<TContext>(
+  opts?: Partial<
+    Omit<csv.Options, "header" | "columns" | "record_delimiter"> & {
+      eol: string;
+      staticHeader: ReadonlyArray<string>;
+      dynamicHeader: (context: TContext) => ReadonlyArray<string>;
+    }
+  >,
 ): common.SimpleDatumTransformerFactory<
-  source.DatumProcessorFactoryArg<unknown>,
-  source.TSQLRow,
+  TContext,
+  ReadonlyArray<unknown> | undefined,
   string
 > {
   const stringifier = new csv.Stringifier({
-    bom: false,
+    ...opts,
+    bom: opts?.bom ?? false,
     cast: {
-      date: opts?.castDate || common.dateToISOUTCString,
+      ...(opts?.cast || {}),
+      date: opts?.cast?.date || common.dateToISOUTCString,
     },
   });
-  const emitHeader = opts?.emitHeader === true;
+  const emitHeader = !!opts?.staticHeader || !!opts?.dynamicHeader;
   const eol = opts?.eol || "\n";
   return (arg) => {
     let headerEmitted = false;
@@ -36,8 +37,10 @@ function sql2CSV(
       let retVal = "";
       if (row) {
         if (emitHeader && !headerEmitted) {
-          const header = getHeader(arg);
-          retVal = stringifier.stringify(header) + eol;
+          retVal =
+            stringifier.stringify(
+              (opts?.staticHeader || opts?.dynamicHeader?.(arg)) ?? [],
+            ) + eol;
           headerEmitted = true;
         }
         retVal += stringifier.stringify(row) + eol;
@@ -47,13 +50,4 @@ function sql2CSV(
   };
 }
 
-const getHeader = ({
-  tableMD,
-  additionalColumns,
-}: source.DatumProcessorFactoryArg<unknown>) => {
-  const header = tableMD.columnNames.map((columnName) => columnName);
-  header.push(...additionalColumns);
-  return header;
-};
-
-export default sql2CSV;
+export default sql2Csv;

@@ -1,14 +1,14 @@
 {
-  "name": "@data-heaving/transform-sql-csv",
+  "name": "@data-heaving/transform-csv",
   "version": "1.0.0",
   "author": {
-    "name" : "Stanislav Muhametsin",
-    "email" : "346799+stazz@users.noreply.github.com",
-    "url" : "https://github.com/stazz"
+    "name": "Stanislav Muhametsin",
+    "email": "346799+stazz@users.noreply.github.com",
+    "url": "https://github.com/stazz"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/DataHeaving/transform-sql-csv.git"
+    "url": "https://github.com/DataHeaving/transform-csv.git"
   },
   "scripts": {
     "tsc": "tsc --project tsconfig.json && tsc --project tsconfig.json --outDir ./dist/esm --module ES2020",
@@ -20,7 +20,7 @@
     "dev-run": "ts-node dist/cjs"
   },
   "dependencies": {
-    "@data-heaving/source-sql": "1.0.0",
+    "@data-heaving/common": "1.0.0",
     "csv-stringify": "5.6.2"
   },
   "devDependencies": {
