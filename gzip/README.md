@@ -9,4 +9,4 @@ Notice that this transformations does not require whole dataset to be loaded int
 Include `@data-heaving/transform-gzip` dependency in your `package.json` file.
 
 # More information
-To learn more what Data Heaving project is all about, see here.
+To learn more what Data Heaving project is all about, [see here](https://github.com/DataHeaving/orchestration).

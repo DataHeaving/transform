@@ -10,4 +10,4 @@ The common aspect for these transformations is that they do not require whole da
 All packages of Data Heaving project are published as NPM packages to public NPM repository under `@data-heaving` organization.
 
 # More information
-To learn more what Data Heaving project is all about, see here.
+To learn more what Data Heaving project is all about, [see here](https://github.com/DataHeaving/orchestration).
