@@ -31,22 +31,25 @@ function sql2Csv<TContext>(
   });
   const emitHeader = !!opts?.staticHeader || !!opts?.dynamicHeader;
   const eol = opts?.eol || "\n";
-  return (arg) => {
-    let headerEmitted = false;
-    return (row) => {
-      let retVal = "";
-      if (row) {
-        if (emitHeader && !headerEmitted) {
-          retVal =
-            stringifier.stringify(
-              (opts?.staticHeader || opts?.dynamicHeader?.(arg)) ?? [],
-            ) + eol;
-          headerEmitted = true;
+  return {
+    transformer: "simple",
+    factory: (arg) => {
+      let headerEmitted = false;
+      return (row) => {
+        let retVal = "";
+        if (row) {
+          if (emitHeader && !headerEmitted) {
+            retVal =
+              stringifier.stringify(
+                (opts?.staticHeader || opts?.dynamicHeader?.(arg)) ?? [],
+              ) + eol;
+            headerEmitted = true;
+          }
+          retVal += stringifier.stringify(row) + eol;
         }
-        retVal += stringifier.stringify(row) + eol;
-      }
-      return retVal;
-    };
+        return retVal;
+      };
+    },
   };
 }
 
