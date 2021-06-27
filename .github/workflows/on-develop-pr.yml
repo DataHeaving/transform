@@ -16,7 +16,7 @@ on:
   push: # Run this pipeline also after merging to develop, to report code coverage to codecov for this branch
     branches:
     - develop
-    
+
 jobs:
   build_and_test:
     strategy:
@@ -32,7 +32,7 @@ jobs:
         with:
           node-version: 14
       - id: build
-        name: Build ${{ matrix.dir }}
+        name: Build and test ${{ matrix.dir }}
         shell: bash
         run: |
           set -e
