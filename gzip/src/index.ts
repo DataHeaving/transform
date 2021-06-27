@@ -2,10 +2,17 @@ import * as common from "@data-heaving/common";
 import * as zlib from "zlib";
 
 export type GZIPTransformOptions = Partial<zlib.ZlibOptions>;
+export type GZIPTransformDatum =
+  | Uint8Array
+  | WithImplicitCoercion<ArrayBuffer | SharedArrayBuffer>
+  | ReadonlyArray<number>
+  | WithImplicitCoercion<Uint8Array | ReadonlyArray<number> | string>
+  | WithImplicitCoercion<string>
+  | { [Symbol.toPrimitive](hint: "string"): string }; // The "Parameters<typeof Buffer.from>[0]" doesn't seem to work here very well
 
 function gzipTransform(
   opts?: GZIPTransformOptions,
-): common.ComplexDatumTransformerFactory<unknown, Buffer | string, Buffer> {
+): common.ComplexDatumTransformerFactory<unknown, GZIPTransformDatum, Buffer> {
   return {
     transformer: "complex",
     factory: () => ({ processor, end }) => {
@@ -29,7 +36,9 @@ function gzipTransform(
       return {
         transformer: (datum, controlFlow) => {
           seenControlFlow = controlFlow;
-          const buffer = datum instanceof Buffer ? datum : Buffer.from(datum);
+          const buffer =
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            datum instanceof Buffer ? datum : Buffer.from(datum as any); // We have to do 'any' because of how Buffer.from is defined in TS libs.
           if (!gzip.write(buffer)) {
             controlFlow?.pause();
             isPaused = true;
