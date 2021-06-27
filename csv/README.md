@@ -1,4 +1,6 @@
 # Data Heaving - Data Transformation to CSV rows
+[![Code Coverage](https://codecov.io/gh/DataHeaving/transform/branch/develop/graph/badge.svg?flag=csv)](https://codecov.io/gh/DataHeaving/transform)
+
 This folder contains source code for `@data-heaving/transform-csv` NPM package.
 The exported entities include:
 - A method to be used as simple transformation from `ReadonlyArray<unknown>|undefined` to CSV row `string`s in [Data Heaving Orchestration API](https://github.com/DataHeaving/orchestration/pipelines).

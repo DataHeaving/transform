@@ -12,8 +12,7 @@ function sql2Csv<TContext>(
   opts?: Partial<
     Omit<csv.Options, "header" | "columns" | "record_delimiter"> & {
       eol: string;
-      staticHeader: ReadonlyArray<string>;
-      dynamicHeader: (context: TContext) => ReadonlyArray<string>;
+      headerRow: common.ItemOrFactory<ReadonlyArray<string>, [TContext]>;
     }
   >,
 ): common.SimpleDatumTransformerFactory<
@@ -29,19 +28,21 @@ function sql2Csv<TContext>(
       date: opts?.cast?.date || common.dateToISOUTCString,
     },
   });
-  const emitHeader = !!opts?.staticHeader || !!opts?.dynamicHeader;
+  const emitHeader = opts?.headerRow;
   const eol = opts?.eol || "\n";
   return {
     transformer: "simple",
-    factory: (arg) => {
+    factory: (context) => {
       let headerEmitted = false;
       return (row) => {
         let retVal = "";
         if (row) {
-          if (emitHeader && !headerEmitted) {
+          if (!headerEmitted && emitHeader) {
             retVal =
               stringifier.stringify(
-                (opts?.staticHeader || opts?.dynamicHeader?.(arg)) ?? [],
+                typeof emitHeader === "function"
+                  ? emitHeader(context)
+                  : emitHeader,
               ) + eol;
             headerEmitted = true;
           }
