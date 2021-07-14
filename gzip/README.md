@@ -1,4 +1,6 @@
 # Data Heaving - Data Transformation to GZIP
+[![Code Coverage](https://codecov.io/gh/DataHeaving/transform/branch/develop/graph/badge.svg?flag=gzip)](https://codecov.io/gh/DataHeaving/transform)
+
 This folder contains source code for `@data-heaving/transform-gzip` NPM package.
 The exported entities include:
 - A method to be used as complex transformation from `Buffer|string` to GZIPped data `Buffer`s in [Data Heaving Orchestration API](https://github.com/DataHeaving/orchestration/pipelines).

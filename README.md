@@ -1,4 +1,6 @@
 # Data Heaving - Data Transformations
+[![Code Coverage](https://codecov.io/gh/DataHeaving/transform/branch/develop/graph/badge.svg)](https://codecov.io/gh/DataHeaving/transform)
+
 This repository is part of [Data Heaving project](https://github.com/DataHeaving).
 There are multiple packages in the repository, all of which are related to transforming data [Data Heaving Orchestration API](https://github.com/DataHeaving/orchestration/pipelines):
 - [CSV package](csv) for transforming arrays into CSV rows (`string`s), and
